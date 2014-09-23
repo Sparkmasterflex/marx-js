@@ -1,0 +1,100 @@
+<!doctype html>
+<html class="no-js">
+<head>
+  <link rel="stylesheet" href="/stylesheets/vendor/reset.css">
+  <link rel="stylesheet" href="/stylesheets/src/base.css">
+  <link rel="stylesheet" href="/stylesheets/src/structures.css">
+  <script>window.jQuery || document.write('<script src="/javascripts/vendor/jquery-1.11.0.min.js"><\/script>')</script>
+  <script src="/javascripts/marx.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      new Marx();
+    });
+  </script>
+</head>
+<body>
+  <!--[if lt IE 8]>
+    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+  <div id="content">
+    <section>
+      <div class="per-75 whitebox centered">
+        <h1>Form Demo</h1>
+        <form action="#action" class="pad-20">
+          <label for="bob">Bob
+            <input type="text" name="bob" id="bob" />
+          </label>
+
+          <label for="fred">Fred
+            <input type="text" name="fred" id="fred" />
+          </label>
+
+          <label for="fred-email">Fred Email
+            <input type="email" name="fred-email" id="fred-email" />
+          </label>
+
+          <label for="fred-birthdate">Fred Birthdate
+            <input type="date" name="fred-birthdate" id="fred-birthdate" />
+          </label>
+
+          <label for="how_many">How Many
+            <input type="number" name="how_many" id="how_many" />
+          </label>
+
+          <label for="holly">
+            <input type="checkbox" name="holly" id="holly" value="1" />
+            Holly
+          </label>
+
+          <label for="molly">
+            <input type="checkbox" name="molly" id="molly" value="1" />
+            Molly
+          </label>
+
+          <label for="lolly">
+            <input type="checkbox" name="lolly" id="lolly" value="1" />
+            Lolly
+          </label>
+
+          <label for="who-1">
+            <input type="radio" name="who" id="who-1" value="William" /> William
+          </label>
+
+          <label for="who-2">
+            <input type="radio" name="who" id="who-2" value="Hank" /> Hank
+          </label>
+
+          <label for="who-3">
+            <input type="radio" name="who" id="who-3" value="Billy" /> Billy
+          </label>
+
+          <label for="who-4">
+            <input type="radio" name="who" id="who-4" value="Because" /> Because
+          </label>
+
+          <label for="who-5">
+            <input type="radio" name="who" id="who-5" value="Don't Know" /> Don't Know
+          </label>
+
+          <label for="description">
+            Description
+            <textarea name="description" id="description"></textarea>
+          </label>
+
+          <label for="select-it">
+            <select name="select-it" id="select-it">
+              <option>Please Select</option>
+              <option value="Him">Him</option>
+              <option value="Her">Her</option>
+              <option value="Them">Them</option>
+              <option value="Us">Us</option>
+              <option value="You">You</option>
+            </select>
+          </label>
+        </form>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
