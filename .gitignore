@@ -4,3 +4,5 @@ node_modules
 marx-js.sublime-project
 
 marx-js.sublime-workspace
+
+*.map
