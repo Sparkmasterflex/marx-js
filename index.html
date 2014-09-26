@@ -9,7 +9,9 @@
 
   <script>
     $(document).ready(function() {
-      new Marx();
+      new Marx({
+        controls: 'advanced'
+      });
     });
   </script>
 </head>
@@ -24,10 +26,12 @@
         <form action="#action" class="pad-20">
           <label for="bob">Bob
             <input type="text" name="bob" id="bob" />
+            <input type="hidden" name="bob-hidden" value="bob's hidden value" />
           </label>
 
           <label for="fred">Fred
             <input type="text" name="fred" id="fred" />
+            <input type="hidden" name="fred-hidden" value="fred's hidden value" />
           </label>
 
           <label for="fred-email">Fred Email
@@ -92,6 +96,8 @@
               <option value="You">You</option>
             </select>
           </label>
+
+          <input type="submit" value="submit" />
         </form>
       </div>
     </section>
