@@ -1,5 +1,5 @@
 window.Marx = (options) ->
-  $.getJSON "http://localhost:9292/quotes", (data) =>
+  $.getJSON "http://marxjs.sparkmasterflex.com:9292/quotes", (data) =>
     @marx_json = data
     @initialize(options)
 
@@ -7,6 +7,9 @@ $.extend Marx.prototype,
   settings:
     controls: 'standard'
     position: 'bottom-right'
+    form: ""
+    ipsum: 3
+    max_ipsum: 10
 
   effected:
     inputs: 0
@@ -26,28 +29,48 @@ $.extend Marx.prototype,
   =========================###
   create_controls: ->
     $('body').append """
-      <div class="marx-js-controls">
-        <link rel="stylesheet" href="http://localhost:9292/marx.css">
-        <a href="#open-controls" class="open-controls">MarxJS</a>
+      <div class="marx-js-controls #{this.settings.position}">
+        <link rel="stylesheet" href="http://marxjs.sparkmasterflex.com:9292/marx.css">
       </div>
     """
     this.$el = $('.marx-js-controls')
+    open_controls = if this.settings.controls isnt 'toggle-all' then "<a href='#open-controls' class='open-controls'>MarxJS</a>"
+    else
+      """
+        <div class="open-controls">
+          <a href="#advanced-controls" class="advanced-controls" title="Show Advanced Controls">Advanced Controls</a>
+          <a href="#standard-controls" class="standard-controls" title="Show Standard Controls">Standard Controls</a>
+          <a href="#populate-whole-form" class="populate-whole-form" title="Populate Whole Form">MarxJS</a>
+        </div>
+      """
+    this.$el.append open_controls
     this.$el.addClass 'marx-js-collapsed'
     switch this.settings.controls
       when 'standard'
         this.add_standard_controls()
         this.$('a.open-controls').click (e) => @toggle_controls(e)
-      when 'advanced'
+      when 'advanced', 'toggle-advanced'
         this.add_standard_controls()
         this.add_advanced_controls()
         this.$('a.open-controls').click (e) => @toggle_controls(e)
       when 'minimum'
-        this.$('a.open-controls').click (e) =>
-          this.populate_inputs()
-          this.populate_textareas()
-          this.populate_checkboxes()
-          this.populate_radios()
-          this.populate_selects()
+        this.$('a.open-controls').click (e) => @populate_whole_form(e)
+      when 'toggle-all'
+        this.add_standard_controls()
+        this.add_advanced_controls()
+        this.$('a.standard-controls').click (e) =>
+          @$('.marx-standard-controls').toggle()
+          @$('.marx-advanced-controls').hide()
+          false
+        this.$('a.advanced-controls').click (e) =>
+          @$('.marx-advanced-controls').toggle()
+          @$('.marx-standard-controls').hide()
+          false
+
+        this.$('a.populate-whole-form').click (e) =>
+          @$('.marx-standard-controls').hide()
+          @$('.marx-advanced-controls').hide()
+          @populate_whole_form(e)
 
   $: (el) -> this.$el.find(el)
 
@@ -81,7 +104,7 @@ $.extend Marx.prototype,
         </div>
       </div>
     """
-    this.$('a.open-controls').before standard
+    this.$('.open-controls').before standard
     this.$('.marx-standard-controls a').click (e) => @popluate_selected_fields(e)
 
   add_advanced_controls: ->
@@ -106,22 +129,39 @@ $.extend Marx.prototype,
         </div>
         <div class="marx-js-group ipsum">
           <p>Generate Ipsum<br />
-            <input min="1" max="10" type="number" value='3' class="no-populate" name="ipsum" /> Paragraphs
+            <input min="1" max="#{this.settings.max_ipsum}" type="number" value='#{this.settings.ipsum}' class="no-populate" name="ipsum" /> Paragraphs
           </p>
           <a href="#generate-ipsum" class="generate-ipsum">Go</a>
         </div>
       </div>
     """
-    this.$('a.open-controls').before advanced
+    this.$('.open-controls').before advanced
+    if this.settings.controls is 'toggle-advanced'
+      this.$('.marx-advanced-controls').hide()
+      this.$('.marx-standard-controls').append "<a href='#advanced' class='marx-toggle-advanced'>&laquo; Advanced</a>"
+      this.$('a.marx-toggle-advanced').click (e) =>
+        txt = if $(e.target).hasClass('opened') then "&laquo; Advanced" else "Close &raquo;"
+        this.$(e.target)
+          .toggleClass('opened')
+          .html(txt)
+        this.$('.marx-advanced-controls').toggle()
     this.$('.marx-advanced-controls a').click (e) => @advanced_actions(e)
 
 
   ###=========================
       POPULATE FORM METHODS
   =========================###
+  populate_whole_form: (e) ->
+    this.populate_inputs()
+    this.populate_textareas()
+    this.populate_checkboxes()
+    this.populate_radios()
+    this.populate_selects()
+    false
+
   populate_inputs: ->
     @effected.inputs = 0
-    $.each $('input'), (i, input) =>
+    $.each $("#{this.settings.form} input"), (i, input) =>
       unless $(input).val() isnt "" or $(input).hasClass 'no-populate'
         @effected.inputs += 1 if ['checkbox', 'radio', 'hidden'].indexOf $(input).attr('type') < 0
         obj = @marx_json[Math.floor(Math.random() * @marx_json.length)]
@@ -134,7 +174,7 @@ $.extend Marx.prototype,
 
   populate_textareas: ->
     this.effected.textareas = 0
-    $.each $('textarea'), (i, input) =>
+    $.each $("#{this.settings.form} textarea"), (i, input) =>
       @effected.textareas += 1
       obj = @marx_json[Math.floor(Math.random() * @marx_json.length)]
       $(input).attr('data-marx-d', true).val obj.body
@@ -143,11 +183,11 @@ $.extend Marx.prototype,
   populate_checkboxes: ->
     this.effected.check_boxes = 0
     names = []
-    $.each $('input[type=checkbox]'), (i, input) ->
+    $.each $("#{this.settings.form} input[type=checkbox]"), (i, input) ->
       names.push $(input).attr('name') unless names.indexOf($(input).attr('name')) >= 0
     $.each names, (i, name) =>
       checked = if Math.floor(Math.random() * 2) is 1 then true else false
-      $("input[name=#{name}]").attr('data-marx-d', true).attr('checked', checked)
+      $("#{this.settings.form} input[name=#{name}]").attr('data-marx-d', true).attr('checked', checked)
       @effected.check_boxes += 1 if checked
 
 
@@ -155,16 +195,16 @@ $.extend Marx.prototype,
   populate_radios: ->
     this.effected.radio_buttons = 0
     names = []
-    $('input[type=radio]').each (i, input) -> names.push $(input).attr('name') unless names.indexOf($(input).attr('name')) >= 0
+    $("#{this.settings.form} input[type=radio]").each (i, input) -> names.push $(input).attr('name') unless names.indexOf($(input).attr('name')) >= 0
     $.each names, (i, name) =>
-      total = $("input[name=#{name}]").length
-      $("input[name=#{name}]:eq(#{Math.floor(Math.random() * total)})").attr('data-marx-d', true).attr('checked', true)
+      total = $("#{this.settings.form} input[name=#{name}]").length
+      $("#{this.settings.form} input[name=#{name}]:eq(#{Math.floor(Math.random() * total)})").attr('data-marx-d', true).attr('checked', true)
       @effected.radio_buttons += 1
 
 
   populate_selects: ->
     this.effected.selects = 0
-    $('select').each (i, select) =>
+    $("#{this.settings.form} select").each (i, select) =>
       @effected.selects += 1
       total = $(select).attr('data-marx-d', true).find('option').length
       rand = Math.floor(Math.random() * total)
@@ -176,12 +216,12 @@ $.extend Marx.prototype,
 
   toggle_hidden_fields: ->
     this.effected.hidden_fields = 0
-    $('input[data-marx-hidden=true]').each (i, input) =>
+    $("#{this.settings.form} input[data-marx-hidden=true]").each (i, input) =>
       type = if $(input).attr('type') is 'hidden' then 'text' else 'hidden'
       $(input).attr('type', type)
       @effected.hidden_fields += 1
 
-    $('input[type=hidden]').each (i, hidden) =>
+    $("#{this.settings.form} input[type=hidden]").each (i, hidden) =>
       unless $(hidden).data('marx-d')?
         @effected.hidden_fields += 1
         $(hidden)
@@ -199,7 +239,7 @@ $.extend Marx.prototype,
         @$el.append $note
         $note
           .css('top', "#{20 + (num*50)}px")
-          .delay(2000 + (num*50))
+          .delay(5000 + (num*50))
           .slideUp 'fast', -> $note.remove()
         num += 1
         @effected[key] = 0
@@ -217,17 +257,19 @@ $.extend Marx.prototype,
     $('.marx-generated-ipsum').remove()
     num = this.$('.ipsum input').val()
     $ipsum = $("""
-      <div class='marx-generated-ipsum'>
+      <div class='marx-generated-ipsum #{this.settings.position}'>
         <h4>Marx Ipsum</h4>
         <a href='#close' class='marx-ipsum-close'>X</a>
         <div class='container'></div>
       </div>
     """)
     $('body').append $ipsum
-    $.getJSON "http://localhost:9292/monologues", (data) =>
-      data.sort () -> 0.5 - Math.random()
-      for i in [1..num]
-        $ipsum.find('.container').append "<p>#{data[i].body}</p>"
+    $.getJSON "http://marxjs.sparkmasterflex.com:9292/monologues", (data) =>
+      max = if num > data.length then data.length-1 else num
+      console.log "Generated the maximum amount of paragraphs available: #{data.length}"
+      monologues = data.sort () -> 0.5 - Math.random()
+      for i in [1..max]
+        $ipsum.find('.container').append "<p>#{monologues[i].body}</p>"
       $('a.marx-ipsum-close').click (e) ->
         $('.marx-generated-ipsum').slideUp 'fast'
         false
@@ -254,11 +296,8 @@ $.extend Marx.prototype,
       when 'populate-selects'
         this.populate_selects()
       else
-        this.populate_inputs()
-        this.populate_textareas()
-        this.populate_checkboxes()
-        this.populate_radios()
-        this.populate_selects()
+        this.populate_whole_form()
+
     this.trigger_notifications()
     false
 

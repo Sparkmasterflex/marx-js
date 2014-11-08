@@ -26,6 +26,15 @@ module.exports = (grunt) ->
           ext: ".css"
         ]
 
+    imagemin:
+      dynamic:
+        files: [
+          expand: true
+          cwd: "images/"
+          src: ["**/*.{png,jpg,gif}"]
+          dest: "images/build/"
+        ]
+
     watch:
       options:
         livereload: true
@@ -52,7 +61,8 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-contrib-watch"
   grunt.loadNpmTasks "grunt-contrib-sass"
   grunt.loadNpmTasks "grunt-contrib-coffee"
+  grunt.loadNpmTasks "grunt-contrib-imagemin"
 
   # 4. Where we tell Grunt what to do when we type "grunt" into the terminal.
   grunt.registerTask "default", ["coffee", "sass", "watch"]
-  grunt.registerTask "build_production", ["coffee", "uglify", "sass"]
+  grunt.registerTask "build_production", ["coffee", "uglify", "sass", "imagemin"]

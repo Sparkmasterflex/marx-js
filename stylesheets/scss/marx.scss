@@ -5,22 +5,13 @@
   p, a, li, label {
     font: { size: 16px; family: Arial, sans-serif; }
     line-height: 1.5em;
+    color: #333;
   }
 }
 .marx-js-controls {
   position: fixed;
-  bottom: 0;
-  right: 0;
-  padding-bottom: 50px;
   background: #f6f6f6;
-  border: {
-    top: 1px solid #ddd;
-    left: 1px solid #ddd;
-  }
   @include box-shadow(0,0,8px,rgba(0, 0, 0, 0.7));
-
-
-
   p.marx-notification {
     position: absolute;
     z-index: 100;
@@ -37,7 +28,18 @@
     .marx-standard-controls,
     .marx-advanced-controls { display: none; }
   }
-  a { color: #333; text-decoration: none; }
+  a {
+    color: #333;
+    text-decoration: none;
+    background-color: #ddd;
+    &:hover { background-color: #ccc; }
+    &.marx-toggle-advanced {
+      background: transparent;
+      float: right;
+      margin: 5px 0;
+      &:hover { background: transparent; }
+    }
+  }
   h4 { font-size: 24px; margin-bottom: 15px; }
   .marx-standard-controls,
   .marx-advanced-controls {
@@ -64,36 +66,100 @@
     a {
       float: right;
       padding: 2px 8px;
-      background: #b3b3ff;
-      &:hover { background: #8a8aff; }
     }
   }
   a.open-controls {
+    width: 100px;
+    padding: 10px 10px 10px 0;
+    &:hover { background-color: #ccc; }
+  }
+  .open-controls {
     position: absolute;
-    bottom: 0;
-    right: 0;
     display: block;
-    background: #9999ff;
-    width: 150px;
-    padding: 4px 0;
-    text-align: center;
-    &:hover { background: #7070ff; }
+    width: 195px;
+    background-image: url(http://marx.dev/assets/icons/groucho.png);
+    background-color: #ddd;
+    background-repeat: no-repeat;
+    background-position: 5px center;
+    @include bg-size(32px, 32px);
+    color: #333;
+    text-align: right;
+    a.populate-whole-form { padding: 10px; }
+    a.populate-whole-form,
+    a.standard-controls, a.advanced-controls {
+      display: block;
+      float: right;
+      background-color: transparent;
+      &:hover { background-color: #ccc; }
+    }
+    a.standard-controls, a.advanced-controls {
+      width: 40px;
+      padding: 10px 0;
+      @include hidden;
+      background-repeat: no-repeat;
+      background-position: center center;
+      @include bg-size(24px, 24px);
+      text-align: left;
+    }
+    a.standard-controls { background-image: url(http://marx.dev/assets/icons/standard.png); }
+    a.advanced-controls { background-image: url(http://marx.dev/assets/icons/advanced.png); }
   }
 }
+
+.bottom-right, .bottom-left {
+  bottom: 0;
+  padding-bottom: 40px;
+  border-top: 1px solid #ddd;
+  .open-controls { bottom: 0; }
+}
+
+.top-right, .top-left {
+  top: 0;
+  padding-top: 40px;
+  border-bottom: 1px solid #ddd;
+  .open-controls { top: 0; }
+}
+
+
+.top-right,
+.bottom-right {
+  &.marx-js-controls {
+    right: 0;
+    padding-bottom: 50px;
+    border-left: 1px solid #ddd;
+    .open-controls { right: 0; }
+  }
+  /*
+   * using the same class as marx-js-controls
+   * puts ipsum on opposite side
+   */
+  &.marx-generated-ipsum {
+    left: 0;
+    border-right: 1px solid #ddd;
+  }
+}
+.top-left,
+.bottom-left {
+  &.marx-js-controls {
+    left: 0;
+    border-right: 1px solid #ddd;
+    .open-controls { left: 0; }
+  }
+
+  &.marx-generated-ipsum {
+    right: 0;
+    border-left: 1px solid #ddd;
+  }
+}
+
 
 .marx-generated-ipsum {
   position: fixed;
   z-index: 1000;
-  bottom: 0;
-  left: 0;
   width: 360px;
   padding: 20px;
   background: #f6f6f6;
   @include box-shadow(0,0,8px,rgba(0, 0, 0, 0.7));
-  border: {
-    top: 1px solid #ddd;
-    right: 1px solid #ddd;
-  }
   .container {
     overflow-y: auto;
     max-height: 360px;

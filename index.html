@@ -10,7 +10,7 @@
   <script>
     $(document).ready(function() {
       new Marx({
-        controls: 'advanced'
+        controls: 'toggle-all'
       });
     });
   </script>
@@ -22,8 +22,21 @@
   <div id="content">
     <section>
       <div class="per-75 whitebox centered">
+        <h1>First Test Form</h1>
+        <form action="#action" class="form-1 pad-20">
+          <label for="sally">Sally
+            <input type="text" name="sally" id="sally" />
+            <input type="hidden" name="sally-hidden" value="sally's hidden value" />
+          </label>
+
+          <label for="brendon">Brendon
+            <input type="text" name="brendon" id="brendon" />
+            <input type="hidden" name="brendon-hidden" value="brendon's hidden value" />
+          </label>
+        </form>
+
         <h1>Form Demo</h1>
-        <form action="#action" class="pad-20">
+        <form id="my-form" action="/" class="form-2 pad-20">
           <label for="bob">Bob
             <input type="text" name="bob" id="bob" />
             <input type="hidden" name="bob-hidden" value="bob's hidden value" />

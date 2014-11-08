@@ -5,16 +5,12 @@
 .marx-generated-ipsum label {
   font-size: 16px;
   font-family: Arial, sans-serif;
-  line-height: 1.5em; }
+  line-height: 1.5em;
+  color: #333; }
 
 .marx-js-controls {
   position: fixed;
-  bottom: 0;
-  right: 0;
-  padding-bottom: 50px;
   background: #f6f6f6;
-  border-top: 1px solid #ddd;
-  border-left: 1px solid #ddd;
   -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
   -moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
   -o-box-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
@@ -39,7 +35,16 @@
       display: none; }
   .marx-js-controls a {
     color: #333;
-    text-decoration: none; }
+    text-decoration: none;
+    background-color: #ddd; }
+    .marx-js-controls a:hover {
+      background-color: #ccc; }
+    .marx-js-controls a.marx-toggle-advanced {
+      background: transparent;
+      float: right;
+      margin: 5px 0; }
+      .marx-js-controls a.marx-toggle-advanced:hover {
+        background: transparent; }
   .marx-js-controls h4 {
     font-size: 24px;
     margin-bottom: 15px; }
@@ -70,36 +75,110 @@
       float: left; }
     .marx-js-controls .marx-js-group a {
       float: right;
-      padding: 2px 8px;
-      background: #b3b3ff; }
-      .marx-js-controls .marx-js-group a:hover {
-        background: #8a8aff; }
+      padding: 2px 8px; }
   .marx-js-controls a.open-controls {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    display: block;
-    background: #9999ff;
-    width: 150px;
-    padding: 4px 0;
-    text-align: center; }
+    width: 100px;
+    padding: 10px 10px 10px 0; }
     .marx-js-controls a.open-controls:hover {
-      background: #7070ff; }
+      background-color: #ccc; }
+  .marx-js-controls .open-controls {
+    position: absolute;
+    display: block;
+    width: 195px;
+    background-image: url(http://marx.dev/assets/icons/groucho.png);
+    background-color: #ddd;
+    background-repeat: no-repeat;
+    background-position: 5px center;
+    -webkit-background-size: 32px 32px;
+    -moz-background-size: 32px 32px;
+    -ms-background-size: 32px 32px;
+    -o-background-size: 32px 32px;
+    background-size: 32px 32px;
+    color: #333;
+    text-align: right; }
+    .marx-js-controls .open-controls a.populate-whole-form {
+      padding: 10px; }
+    .marx-js-controls .open-controls a.populate-whole-form,
+    .marx-js-controls .open-controls a.standard-controls, .marx-js-controls .open-controls a.advanced-controls {
+      display: block;
+      float: right;
+      background-color: transparent; }
+      .marx-js-controls .open-controls a.populate-whole-form:hover,
+      .marx-js-controls .open-controls a.standard-controls:hover, .marx-js-controls .open-controls a.advanced-controls:hover {
+        background-color: #ccc; }
+    .marx-js-controls .open-controls a.standard-controls, .marx-js-controls .open-controls a.advanced-controls {
+      width: 40px;
+      padding: 10px 0;
+      text-indent: -9999px;
+      overflow: hidden;
+      background-repeat: no-repeat;
+      background-position: center center;
+      -webkit-background-size: 24px 24px;
+      -moz-background-size: 24px 24px;
+      -ms-background-size: 24px 24px;
+      -o-background-size: 24px 24px;
+      background-size: 24px 24px;
+      text-align: left; }
+    .marx-js-controls .open-controls a.standard-controls {
+      background-image: url(http://marx.dev/assets/icons/standard.png); }
+    .marx-js-controls .open-controls a.advanced-controls {
+      background-image: url(http://marx.dev/assets/icons/advanced.png); }
+
+.bottom-right, .bottom-left {
+  bottom: 0;
+  padding-bottom: 40px;
+  border-top: 1px solid #ddd; }
+  .bottom-right .open-controls, .bottom-left .open-controls {
+    bottom: 0; }
+
+.top-right, .top-left {
+  top: 0;
+  padding-top: 40px;
+  border-bottom: 1px solid #ddd; }
+  .top-right .open-controls, .top-left .open-controls {
+    top: 0; }
+
+.top-right,
+.bottom-right {
+  /*
+   * using the same class as marx-js-controls
+   * puts ipsum on opposite side
+   */ }
+  .top-right.marx-js-controls,
+  .bottom-right.marx-js-controls {
+    right: 0;
+    padding-bottom: 50px;
+    border-left: 1px solid #ddd; }
+    .top-right.marx-js-controls .open-controls,
+    .bottom-right.marx-js-controls .open-controls {
+      right: 0; }
+  .top-right.marx-generated-ipsum,
+  .bottom-right.marx-generated-ipsum {
+    left: 0;
+    border-right: 1px solid #ddd; }
+
+.top-left.marx-js-controls,
+.bottom-left.marx-js-controls {
+  left: 0;
+  border-right: 1px solid #ddd; }
+  .top-left.marx-js-controls .open-controls,
+  .bottom-left.marx-js-controls .open-controls {
+    left: 0; }
+.top-left.marx-generated-ipsum,
+.bottom-left.marx-generated-ipsum {
+  right: 0;
+  border-left: 1px solid #ddd; }
 
 .marx-generated-ipsum {
   position: fixed;
   z-index: 1000;
-  bottom: 0;
-  left: 0;
   width: 360px;
   padding: 20px;
   background: #f6f6f6;
   -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
   -moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
   -o-box-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
-  border-top: 1px solid #ddd;
-  border-right: 1px solid #ddd; }
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.7); }
   .marx-generated-ipsum .container {
     overflow-y: auto;
     max-height: 360px;
