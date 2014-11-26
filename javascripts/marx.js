@@ -1,6 +1,6 @@
 window.Marx = function(options) {
   var _this = this;
-  return $.getJSON("http://marxjs.sparkmasterflex.com:9292/characters", function(data) {
+  return $.getJSON("http://marx.dev/characters", function(data) {
     _this.marx_json = data;
     return _this.initialize(options);
   });
@@ -98,7 +98,7 @@ $.extend(Marx.prototype, {
       _this = this;
     advanced = "<div class=\"marx-advanced-controls\">\n  <h4>Advanced Options</h4>\n</div>";
     this.$('.open-controls').before(advanced);
-    _ref = [['clear-form', 'Clear Form'], ['populate-submit', 'Populate and Submit'], ['show-hidden', '<span data-text="Hide">Show</span> Hidden Fields'], ['expand-select', '<span data-text="Collapse">Expand</span> Select Boxes'], ['generate-ipsum', 'Generate Ipsum']];
+    _ref = [['clear-form', 'Clear Form'], ['populate-submit', 'Populate and Submit'], ['show-hidden', '<span data-text="Hide">Show</span> Hidden Fields'], ['expand-select', '<span data-text="Collapse">Expand</span> Select Boxes'], ['random-image', 'Download Random Image'], ['generate-ipsum', 'Generate Ipsum']];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       action = _ref[_i];
       $('.marx-advanced-controls').append(this.build_action(action));
@@ -346,8 +346,8 @@ $.extend(Marx.prototype, {
         $('select[data-marx-d=true] option:eq(0)').attr('selected', true);
         break;
       case 'populate-submit':
-        $.when(this.populate_inputs(), this.populate_textareas(), this.populate_checkboxes(), this.populate_radios(), this.populate_selects()).then(function() {
-          $(e.target).replace("<span class='spinner'>Loading</span>");
+        $.when(this.populate_whole_form()).then(function() {
+          $(e.target).replaceWith("<span class='spinner'>Loading</span>");
           return setTimeout(function() {
             return $('form').submit();
           }, 500);
@@ -368,6 +368,9 @@ $.extend(Marx.prototype, {
             return $(select).attr('size', $(select).find('option').length);
           }
         });
+        break;
+      case 'random-image':
+        window.location = "http://marxjs.sparkmasterflex.com:9292/get-image";
         break;
       case 'generate-ipsum':
         this.generate_ipsum();
