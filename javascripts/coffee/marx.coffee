@@ -1,6 +1,5 @@
 window.Marx = (options) ->
-  # $.getJSON "http://marxjs.sparkmasterflex.com:9292/characters", (data) =>
-  $.getJSON "http://marx.dev/characters", (data) =>
+  $.getJSON "http://marxjs.sparkmasterflex.com:9292/characters", (data) =>
     @marx_json = data
     @initialize(options)
 

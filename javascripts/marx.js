@@ -1,6 +1,6 @@
 window.Marx = function(options) {
   var _this = this;
-  return $.getJSON("http://marx.dev/characters", function(data) {
+  return $.getJSON("http://marxjs.sparkmasterflex.com:9292/characters", function(data) {
     _this.marx_json = data;
     return _this.initialize(options);
   });
