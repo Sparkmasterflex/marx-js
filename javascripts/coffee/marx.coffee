@@ -1,5 +1,5 @@
 window.Marx = (options) ->
-  $.getJSON "http://marxjs.sparkmasterflex.com:9292/characters", (data) =>
+  $.getJSON "http://marxjs.com/characters", (data) =>
     @marx_json = data
     @initialize(options)
 
@@ -30,7 +30,7 @@ $.extend Marx.prototype,
   create_controls: ->
     $('body').append """
       <div class="marx-js-controls #{this.settings.position}">
-        <link rel="stylesheet" href="http://marxjs.sparkmasterflex.com:9292/marx.css">
+        <link rel="stylesheet" href="http://marxjs.com/marx.css">
       </div>
     """
     this.$el = $('.marx-js-controls')
@@ -160,7 +160,7 @@ $.extend Marx.prototype,
 
   populate_textareas: ->
     this.effected.textareas = 0
-    $.getJSON "http://marxjs.sparkmasterflex.com:9292/quotes", (data) =>
+    $.getJSON "http://marxjs.com/quotes", (data) =>
       $.each $("#{this.settings.form} textarea"), (i, input) =>
         @effected.textareas += 1
         $(input).attr('data-marx-d', true).val data[Math.floor(Math.random() * data.length)].body
@@ -252,7 +252,7 @@ $.extend Marx.prototype,
       </div>
     """)
     $('body').append $ipsum
-    $.getJSON "http://marxjs.sparkmasterflex.com:9292/monologues", (data) =>
+    $.getJSON "http://marxjs.com/monologues", (data) =>
       max = if num > data.length then data.length-1 else num
       monologues = data.sort () -> 0.5 - Math.random()
       for i in [1..max]
@@ -313,7 +313,7 @@ $.extend Marx.prototype,
           else
             $(select).attr('size', $(select).find('option').length)
       when 'random-image'
-        window.location = "http://marxjs.sparkmasterflex.com:9292/get-image"
+        window.location = "http://marxjs.com/get-image"
       when 'generate-ipsum' then this.generate_ipsum()
 
     false
