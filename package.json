@@ -1,6 +1,6 @@
 {
   "name": "marx-js",
-  "version": "0.1.0",
+  "version": "0.2.3",
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-coffee": "~0.8.0",
