@@ -36,7 +36,7 @@ $.extend(Marx.prototype, {
       _this = this;
     $('body').append("<div class=\"marx-js-controls " + this.settings.position + "\">\n  <link rel=\"stylesheet\" href=\"http://marxjs.com/marx.css\">\n</div>");
     this.$el = $('.marx-js-controls');
-    open_controls = this.settings.controls !== 'toggle-all' ? "<a href='#open-controls' class='open-controls'>MarxJS</a>" : "<div class=\"open-controls\">\n  <a href=\"#advanced-controls\" class=\"advanced-controls\" title=\"Show Advanced Controls\">Advanced Controls</a>\n  <a href=\"#standard-controls\" class=\"standard-controls\" title=\"Show Standard Controls\">Standard Controls</a>\n  <a href=\"#populate-whole-form\" class=\"populate-whole-form\" title=\"Populate Whole Form\">MarxJS</a>\n</div>";
+    open_controls = this.settings.controls !== 'toggle-all' ? "<a href='#open-controls' class='open-controls'>Marx.js</a>" : "<div class=\"open-controls\">\n  <a href=\"#advanced-controls\" class=\"advanced-controls\" title=\"Show Advanced Controls\">Advanced Controls</a>\n  <a href=\"#standard-controls\" class=\"standard-controls\" title=\"Show Standard Controls\">Standard Controls</a>\n  <a href=\"#populate-whole-form\" class=\"populate-whole-form\" title=\"Populate Whole Form\">Marx.js</a>\n</div>";
     this.$el.append(open_controls);
     this.$el.addClass('marx-js-collapsed');
     switch (this.settings.controls) {
@@ -118,10 +118,7 @@ $.extend(Marx.prototype, {
     this.$('.marx-advanced-controls').hide();
     this.$('.marx-standard-controls').append("<a href='#advanced' class='marx-toggle-advanced'>&laquo; Advanced</a>");
     return this.$('a.marx-toggle-advanced').click(function(e) {
-      var txt;
-      txt = $(e.target).hasClass('opened') ? "&laquo; Advanced" : "Close &raquo;";
-      _this.$(e.target).toggleClass('opened').html(txt);
-      return _this.$('.marx-advanced-controls').toggle();
+      return _this.toggle_advanced($(e.target));
     });
   },
   /*=========================
@@ -308,6 +305,18 @@ $.extend(Marx.prototype, {
 
   toggle_controls: function(e) {
     this.$el.toggleClass('marx-js-collapsed');
+    if (this.settings.controls === 'toggle-advanced' && this.$el.hasClass('marx-js-collapsed')) {
+      if ($('.marx-advanced-controls').is(':visible')) {
+        this.toggle_advanced($('a.marx-toggle-advanced'));
+      }
+    }
+    return false;
+  },
+  toggle_advanced: function($link) {
+    var txt;
+    txt = $link.hasClass('opened') ? "&laquo; Advanced" : "Close &raquo;";
+    $link.toggleClass('opened').html(txt);
+    this.$('.marx-advanced-controls').toggle();
     return false;
   },
   popluate_selected_fields: function(e) {

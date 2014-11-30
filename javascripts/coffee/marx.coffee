@@ -34,13 +34,13 @@ $.extend Marx.prototype,
       </div>
     """
     this.$el = $('.marx-js-controls')
-    open_controls = if this.settings.controls isnt 'toggle-all' then "<a href='#open-controls' class='open-controls'>MarxJS</a>"
+    open_controls = if this.settings.controls isnt 'toggle-all' then "<a href='#open-controls' class='open-controls'>Marx.js</a>"
     else
       """
         <div class="open-controls">
           <a href="#advanced-controls" class="advanced-controls" title="Show Advanced Controls">Advanced Controls</a>
           <a href="#standard-controls" class="standard-controls" title="Show Standard Controls">Standard Controls</a>
-          <a href="#populate-whole-form" class="populate-whole-form" title="Populate Whole Form">MarxJS</a>
+          <a href="#populate-whole-form" class="populate-whole-form" title="Populate Whole Form">Marx.js</a>
         </div>
       """
     this.$el.append open_controls
@@ -120,12 +120,7 @@ $.extend Marx.prototype,
   set_toggle_advanced: ->
     this.$('.marx-advanced-controls').hide()
     this.$('.marx-standard-controls').append "<a href='#advanced' class='marx-toggle-advanced'>&laquo; Advanced</a>"
-    this.$('a.marx-toggle-advanced').click (e) =>
-      txt = if $(e.target).hasClass('opened') then "&laquo; Advanced" else "Close &raquo;"
-      this.$(e.target)
-        .toggleClass('opened')
-        .html(txt)
-      this.$('.marx-advanced-controls').toggle()
+    this.$('a.marx-toggle-advanced').click (e) => @toggle_advanced $(e.target)
 
 
 
@@ -270,6 +265,16 @@ $.extend Marx.prototype,
   =====================###
   toggle_controls: (e) ->
     this.$el.toggleClass 'marx-js-collapsed'
+    if this.settings.controls is 'toggle-advanced' and this.$el.hasClass 'marx-js-collapsed'
+      this.toggle_advanced $('a.marx-toggle-advanced') if $('.marx-advanced-controls').is(':visible')
+    false
+
+  toggle_advanced: ($link) ->
+    txt = if $link.hasClass('opened') then "&laquo; Advanced" else "Close &raquo;"
+    $link
+      .toggleClass('opened')
+      .html(txt)
+    this.$('.marx-advanced-controls').toggle()
     false
 
   popluate_selected_fields: (e) ->
