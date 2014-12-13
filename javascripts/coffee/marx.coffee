@@ -1,5 +1,6 @@
 window.Marx = (options) ->
-  $.getJSON "http://marxjs.com/characters", (data) =>
+  this._url = "http://marxjs.com"
+  $.getJSON "#{this._url}/characters", (data) =>
     @marx_json = data
     @initialize(options)
 
@@ -30,7 +31,7 @@ $.extend Marx.prototype,
   create_controls: ->
     $('body').append """
       <div class="marx-js-controls #{this.settings.position}">
-        <link rel="stylesheet" href="http://marxjs.com/marx.css">
+        <link rel="stylesheet" href="#{this._url}/marx.css">
       </div>
     """
     this.$el = $('.marx-js-controls')
@@ -40,7 +41,7 @@ $.extend Marx.prototype,
         <div class="open-controls">
           <a href="#advanced-controls" class="advanced-controls" title="Show Advanced Controls">Advanced Controls</a>
           <a href="#standard-controls" class="standard-controls" title="Show Standard Controls">Standard Controls</a>
-          <a href="#populate-whole-form" class="populate-whole-form" title="Populate Whole Form">Marx.js</a>
+          <a href="#populate-whole-form" class="quick-populate" title="Populate Whole Form">Marx.js</a>
         </div>
       """
     this.$el.append open_controls
@@ -59,15 +60,17 @@ $.extend Marx.prototype,
         this.add_standard_controls()
         this.add_advanced_controls()
         this.$('a.standard-controls').click (e) =>
+          $('p.marx-notification').remove()
           @$('.marx-standard-controls').toggle()
           @$('.marx-advanced-controls').hide()
           false
         this.$('a.advanced-controls').click (e) =>
+          $('p.marx-notification').remove()
           @$('.marx-advanced-controls').toggle()
           @$('.marx-standard-controls').hide()
           false
 
-        this.$('a.populate-whole-form').click (e) =>
+        this.$('a.quick-populate').click (e) =>
           @$('.marx-standard-controls').hide()
           @$('.marx-advanced-controls').hide()
           @populate_whole_form(e)
@@ -139,7 +142,6 @@ $.extend Marx.prototype,
     @effected.inputs = 0
     $.each $("#{this.settings.form} input"), (i, input) =>
       unless $(input).val() isnt "" or $(input).hasClass 'no-populate'
-        @effected.inputs += 1 if ['checkbox', 'radio', 'hidden'].indexOf $(input).attr('type') < 0
         obj = this.get_random()
         brother = JSON.parse(obj.brother)
         movie = JSON.parse(obj.movie)
@@ -148,17 +150,31 @@ $.extend Marx.prototype,
           when 'number' then movie.year
           when 'email' then "#{brother.name.toLowerCase().replace(/\s/g, '')}@#{movie.name.toLowerCase().replace(/\s/g, '')}.com"
           when 'url' then "http://#{movie.name.toLowerCase().replace(/\s/g, '')}.com"
-          when 'date' then "#{movie.year}-01-01"
+          when 'date'
+            rand = Math.random()
+            year = movie.year.toString()
+            "#{year}-0#{year.substr(Math.floor(rand*4), 1)}-2#{year.substr(Math.floor(rand*4), 1)}"
           else
-            strings[Math.floor(Math.random() * strings.length)]
-        $(input).attr('data-marx-d', true).val value
+            str = strings[Math.floor(Math.random() * strings.length)]
+            if !str? or str is "" then "Marx" else str
+        if ['checkbox', 'radio', 'hidden'].indexOf $(input).attr('type') < 0
+          $(input)
+            .attr('data-marx-d', true)
+            .val(value)
+            .trigger('change')
+            .trigger 'blur'
+          @effected.inputs += 1
+
 
   populate_textareas: ->
     this.effected.textareas = 0
-    $.getJSON "http://marxjs.com/quotes", (data) =>
+    $.getJSON "#{this._url}/quotes", (data) =>
       $.each $("#{this.settings.form} textarea"), (i, input) =>
         @effected.textareas += 1
-        $(input).attr('data-marx-d', true).val data[Math.floor(Math.random() * data.length)].body
+        $(input)
+          .attr('data-marx-d', true)
+          .val(data[Math.floor(Math.random() * data.length)].body)
+          .trigger('change').trigger('blur')
 
 
   populate_checkboxes: ->
@@ -169,7 +185,10 @@ $.extend Marx.prototype,
     $.each names, (i, name) =>
       checked = if Math.floor(Math.random() * 2) is 1 then true else false
       clean_name = name.replace(/\[/g, '\\[').replace(/\]/g, '\\]')
-      $("#{this.settings.form} input[name=#{clean_name}]").attr('data-marx-d', true).attr('checked', checked)
+      $("#{this.settings.form} input[name=#{clean_name}]")
+        .attr('data-marx-d', true)
+        .attr('checked', checked)
+        .trigger('change').trigger('blur')
       @effected.check_boxes += 1 if checked
 
 
@@ -181,7 +200,10 @@ $.extend Marx.prototype,
     $.each names, (i, name) =>
       clean_name = name.replace(/\[/g, '\\[').replace(/\]/g, '\\]')
       total = $("#{this.settings.form} input[name=#{clean_name}]").length
-      $("#{this.settings.form} input[name=#{name}]:eq(#{Math.floor(Math.random() * total)})").attr('data-marx-d', true).attr('checked', true)
+      $("#{this.settings.form} input[name=#{name}]:eq(#{Math.floor(Math.random() * total)})")
+        .attr('data-marx-d', true)
+        .attr('checked', true)
+        .trigger('change').trigger('blur')
       @effected.radio_buttons += 1
 
 
@@ -196,6 +218,7 @@ $.extend Marx.prototype,
         $opt.attr('selected', true)
       else
         $opt.next('option').attr('selected', true)
+      $(select).trigger('change').trigger('blur')
 
   toggle_hidden_fields: ->
     this.effected.hidden_fields = 0
@@ -247,7 +270,7 @@ $.extend Marx.prototype,
       </div>
     """)
     $('body').append $ipsum
-    $.getJSON "http://marxjs.com/monologues", (data) =>
+    $.getJSON "#{this._url}/monologues", (data) =>
       max = if num > data.length then data.length-1 else num
       monologues = data.sort () -> 0.5 - Math.random()
       for i in [1..max]
@@ -264,6 +287,7 @@ $.extend Marx.prototype,
            EVENTS
   =====================###
   toggle_controls: (e) ->
+    $('p.marx-notification').remove()
     this.$el.toggleClass 'marx-js-collapsed'
     if this.settings.controls is 'toggle-advanced' and this.$el.hasClass 'marx-js-collapsed'
       this.toggle_advanced $('a.marx-toggle-advanced') if $('.marx-advanced-controls').is(':visible')
@@ -318,7 +342,7 @@ $.extend Marx.prototype,
           else
             $(select).attr('size', $(select).find('option').length)
       when 'random-image'
-        window.location = "http://marxjs.com/get-image"
+        window.location = "#{this._url}/get-image"
       when 'generate-ipsum' then this.generate_ipsum()
 
     false

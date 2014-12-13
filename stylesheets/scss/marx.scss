@@ -85,8 +85,8 @@
     @include bg-size(32px, 32px);
     color: #333;
     text-align: right;
-    a.populate-whole-form { padding: 10px; }
-    a.populate-whole-form,
+    a.quick-populate { padding: 10px; }
+    a.quick-populate,
     a.standard-controls, a.advanced-controls {
       display: block;
       float: right;
