@@ -107,7 +107,7 @@ $.extend Marx.prototype,
       ['show-hidden', '<span data-text="Hide">Show</span> Hidden Fields'],
       ['expand-select', '<span data-text="Collapse">Expand</span> Select Boxes'],
       ['random-image', 'Download Random Image'],
-      ['generate-ipsum', 'Generate Ipsum']
+      ['generate-ipsum', "Generate Ipsum <p class='ipsum'><input type='number' value='#{this.settings.ipsum}' max=''#{this.settings.max_ipsum}' /> Paragraphs</p>"]
     ]
     this.set_toggle_advanced() if this.settings.controls is 'toggle-advanced'
     this.$('.marx-advanced-controls a').click (e) => @advanced_actions(e)
@@ -115,8 +115,8 @@ $.extend Marx.prototype,
   build_action: (action) ->
     """
       <div class="marx-js-group">
-        <p>#{action[1]}</p>
         <a href="##{action[0]}" class="#{action[0]}">Go</a>
+        <p>#{action[1]}</p>
       </div>
     """
 

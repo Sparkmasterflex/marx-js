@@ -101,7 +101,7 @@ $.extend(Marx.prototype, {
       _this = this;
     advanced = "<div class=\"marx-advanced-controls\">\n  <h4>Advanced Options</h4>\n</div>";
     this.$('.open-controls').before(advanced);
-    _ref = [['clear-form', 'Clear Form'], ['populate-submit', 'Populate and Submit'], ['show-hidden', '<span data-text="Hide">Show</span> Hidden Fields'], ['expand-select', '<span data-text="Collapse">Expand</span> Select Boxes'], ['random-image', 'Download Random Image'], ['generate-ipsum', 'Generate Ipsum']];
+    _ref = [['clear-form', 'Clear Form'], ['populate-submit', 'Populate and Submit'], ['show-hidden', '<span data-text="Hide">Show</span> Hidden Fields'], ['expand-select', '<span data-text="Collapse">Expand</span> Select Boxes'], ['random-image', 'Download Random Image'], ['generate-ipsum', "Generate Ipsum <p class='ipsum'><input type='number' value='" + this.settings.ipsum + "' max=''" + this.settings.max_ipsum + "' /> Paragraphs</p>"]];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       action = _ref[_i];
       $('.marx-advanced-controls').append(this.build_action(action));
@@ -114,7 +114,7 @@ $.extend(Marx.prototype, {
     });
   },
   build_action: function(action) {
-    return "<div class=\"marx-js-group\">\n  <p>" + action[1] + "</p>\n  <a href=\"#" + action[0] + "\" class=\"" + action[0] + "\">Go</a>\n</div>";
+    return "<div class=\"marx-js-group\">\n  <a href=\"#" + action[0] + "\" class=\"" + action[0] + "\">Go</a>\n  <p>" + action[1] + "</p>\n</div>";
   },
   set_toggle_advanced: function() {
     var _this = this;
