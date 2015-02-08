@@ -107,14 +107,14 @@
   }
 }
 
-.bottom-right, .bottom-left {
+.marx-bottom-right, .marx-bottom-left {
   bottom: 0;
   padding-bottom: 40px;
   border-top: 1px solid #ddd;
   .open-controls { bottom: 0; }
 }
 
-.top-right, .top-left {
+.marx-top-right, .marx-top-left {
   top: 0;
   padding-top: 40px;
   border-bottom: 1px solid #ddd;
@@ -122,8 +122,8 @@
 }
 
 
-.top-right,
-.bottom-right {
+.marx-top-right,
+.marx-bottom-right {
   &.marx-js-controls {
     right: 0;
     padding-bottom: 50px;
@@ -139,8 +139,8 @@
     border-right: 1px solid #ddd;
   }
 }
-.top-left,
-.bottom-left {
+.marx-top-left,
+.marx-bottom-left {
   &.marx-js-controls {
     left: 0;
     border-right: 1px solid #ddd;
@@ -153,6 +153,14 @@
   }
 }
 
+p.marx-password-note {
+  font-size: 16px;
+  padding: 3px 5px;
+  background-color: rgba(#333, 0.8);
+  border: 1px solid #333;
+  color: #ddd;
+  @include border-radius(3px);
+}
 
 .marx-generated-ipsum {
   position: fixed;

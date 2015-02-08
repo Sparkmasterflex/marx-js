@@ -30,7 +30,7 @@ $.extend Marx.prototype,
   =========================###
   create_controls: ->
     $('body').append """
-      <div class="marx-js-controls #{this.settings.position}">
+      <div class="marx-js-controls marx-#{this.settings.position}">
         <link rel="stylesheet" href="#{this._url}/marx.css">
       </div>
     """
@@ -157,6 +157,8 @@ $.extend Marx.prototype,
           else
             str = strings[Math.floor(Math.random() * strings.length)]
             if !str? or str is "" then "Marx" else str
+        this.show_password($(input), value) if $(input).attr('type') is 'password'
+
         if ['checkbox', 'radio', 'hidden'].indexOf $(input).attr('type') < 0
           $(input)
             .attr('data-marx-d', true)
@@ -164,6 +166,9 @@ $.extend Marx.prototype,
             .trigger('change')
             .trigger 'blur'
           @effected.inputs += 1
+
+  show_password: ($input, password) ->
+    $input.after "<p class='marx-password-note'>Password: #{password}</p>"
 
 
   populate_textareas: ->
