@@ -1,3 +1,11 @@
+/*
+  moment.js
+  version : 1.0.1
+  authors : Keith Raymond, Marx.js contributor
+  license : MIT
+  marxjs.com
+*/
+
 window.Marx = function(options) {
   var _this = this;
   this._url = "http://marxjs.com";
@@ -295,7 +303,7 @@ $.extend(Marx.prototype, {
       _this = this;
     $('.marx-generated-ipsum').remove();
     num = this.$('.ipsum input').val();
-    $ipsum = $("<div class='marx-generated-ipsum " + this.settings.position + "'>\n  <h4>Marx Ipsum</h4>\n  <a href='#close' class='marx-ipsum-close'>X</a>\n  <div class='marx-container'></div>\n</div>");
+    $ipsum = $("<div class='marx-generated-ipsum marx-" + this.settings.position + "'>\n  <h4>Marx Ipsum</h4>\n  <a href='#close' class='marx-ipsum-close'>X</a>\n  <div class='marx-container'></div>\n</div>");
     $('body').append($ipsum);
     return $.getJSON("" + this._url + "/monologues", function(data) {
       var i, max, monologues, _i;

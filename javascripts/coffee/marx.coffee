@@ -1,3 +1,10 @@
+###
+  moment.js
+  version : 1.0.1
+  authors : Keith Raymond, Marx.js contributor
+  license : MIT
+  marxjs.com
+###
 window.Marx = (options) ->
   this._url = "http://marxjs.com"
   $.getJSON "#{this._url}/characters", (data) =>
@@ -268,7 +275,7 @@ $.extend Marx.prototype,
     $('.marx-generated-ipsum').remove()
     num = this.$('.ipsum input').val()
     $ipsum = $("""
-      <div class='marx-generated-ipsum #{this.settings.position}'>
+      <div class='marx-generated-ipsum marx-#{this.settings.position}'>
         <h4>Marx Ipsum</h4>
         <a href='#close' class='marx-ipsum-close'>X</a>
         <div class='marx-container'></div>
