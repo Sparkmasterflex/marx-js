@@ -1,4 +1,7 @@
 # marx.js
+
+[![GitHub version](https://badge.fury.io/gh/Sparkmasterflex%2Fmarx-js.svg)](http://badge.fury.io/gh/Sparkmasterflex%2Fmarx-js)
+
 jQuery plugin for development and testing HTML forms via populating
 
 Installation is easy. Download Marx.js, link to it with a &lt;script> tag and then initialize it in your JavaScript.
