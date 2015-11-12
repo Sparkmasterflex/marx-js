@@ -18,19 +18,37 @@ $.extend Marx.prototype,
     form: ""
     ipsum: 3
     max_ipsum: 10
-
-  effected:
-    inputs: 0
-    texareas: 0
-    selects: 0
-    check_boxes: 0
-    radio_buttons: 0
-    hidden_fields: 0
+    onload: false
 
   initialize: (options) ->
     $.extend this.settings, options
+    this.methods = this.method_by_keys()
+    this.effected = this.default_counts()
+
+    this.auto_populate() if this.settings.onload
     this.create_controls()
 
+  method_by_keys: ->
+    {
+      marx:       this
+      inputs:     this.populate_inputs
+      textareas:  this.populate_textareas
+      checkboxes: this.populate_checkboxes
+      radios:     this.populate_radios
+      selects:    this.populate_selects
+      # ipsum:      this.generate_ipsum
+      # image:      this.get_random
+    }
+
+  default_counts: ->
+    {
+      inputs: 0
+      texareas: 0
+      selects: 0
+      check_boxes: 0
+      radio_buttons: 0
+      hidden_fields: 0
+    }
 
   ###=========================
         BUILD CONTROLS
@@ -137,6 +155,14 @@ $.extend Marx.prototype,
   ###=========================
       POPULATE FORM METHODS
   =========================###
+  auto_populate: ->
+    onload = this.settings.onload
+    if onload is true
+      this.populate_whole_form()
+    else
+      $.each onload, (i, opt) =>
+        @methods[opt]()
+
   populate_whole_form: (e) ->
     this.populate_inputs()
     this.populate_textareas()
@@ -146,10 +172,11 @@ $.extend Marx.prototype,
     false
 
   populate_inputs: ->
-    @effected.inputs = 0
-    $.each $("#{this.settings.form} input"), (i, input) =>
+    marx = this.marx or this
+    marx.effected?.inputs = 0
+    $.each $("#{marx.settings.form} input"), (i, input) =>
       unless $(input).val() isnt "" or $(input).hasClass 'no-populate'
-        obj = this.get_random()
+        obj = marx.get_random()
         brother = JSON.parse(obj.brother)
         movie = JSON.parse(obj.movie)
         strings = [brother.name, movie.name, obj.first_name, obj.last_name, obj.description].filter () -> true
@@ -164,7 +191,7 @@ $.extend Marx.prototype,
           else
             str = strings[Math.floor(Math.random() * strings.length)]
             if !str? or str is "" then "Marx" else str
-        this.show_password($(input), value) if $(input).attr('type') is 'password'
+        marx.show_password($(input), value) if $(input).attr('type') is 'password'
 
         if ['checkbox', 'radio', 'hidden'].indexOf $(input).attr('type') < 0
           $(input)
@@ -172,57 +199,56 @@ $.extend Marx.prototype,
             .val(value)
             .trigger('change')
             .trigger 'blur'
-          @effected.inputs += 1
+          marx.effected.inputs += 1
 
   show_password: ($input, password) ->
     $input.after "<p class='marx-password-note'>Password: #{password}</p>"
 
-
   populate_textareas: ->
-    this.effected.textareas = 0
-    $.getJSON "#{this._url}/quotes", (data) =>
-      $.each $("#{this.settings.form} textarea"), (i, input) =>
-        @effected.textareas += 1
+    marx = this.marx or this
+    marx.effected.textareas = 0
+    $.getJSON "#{marx._url}/quotes", (data) =>
+      $.each $("#{marx.settings.form} textarea"), (i, input) =>
+        marx.effected.textareas += 1
         $(input)
           .attr('data-marx-d', true)
           .val(data[Math.floor(Math.random() * data.length)].body)
           .trigger('change').trigger('blur')
 
-
   populate_checkboxes: ->
-    this.effected.check_boxes = 0
+    marx = this.marx or this
+    marx.effected.check_boxes = 0
     names = []
-    $.each $("#{this.settings.form} input[type=checkbox]"), (i, input) ->
+    $.each $("#{marx.settings.form} input[type=checkbox]"), (i, input) ->
       names.push $(input).attr('name') unless names.indexOf($(input).attr('name')) >= 0
     $.each names, (i, name) =>
       checked = if Math.floor(Math.random() * 2) is 1 then true else false
       clean_name = name.replace(/\[/g, '\\[').replace(/\]/g, '\\]')
-      $("#{this.settings.form} input[name=#{clean_name}]")
+      $("#{marx.settings.form} input[name=#{clean_name}]")
         .attr('data-marx-d', true)
         .attr('checked', checked)
         .trigger('change').trigger('blur')
-      @effected.check_boxes += 1 if checked
-
-
+      marx.effected.check_boxes += 1 if checked
 
   populate_radios: ->
-    this.effected.radio_buttons = 0
+    marx = this.marx or this
+    marx.effected.radio_buttons = 0
     names = []
-    $("#{this.settings.form} input[type=radio]").each (i, input) -> names.push $(input).attr('name') unless names.indexOf($(input).attr('name')) >= 0
+    $("#{marx.settings.form} input[type=radio]").each (i, input) -> names.push $(input).attr('name') unless names.indexOf($(input).attr('name')) >= 0
     $.each names, (i, name) =>
       clean_name = name.replace(/\[/g, '\\[').replace(/\]/g, '\\]')
-      total = $("#{this.settings.form} input[name=#{clean_name}]").length
-      $("#{this.settings.form} input[name=#{name}]:eq(#{Math.floor(Math.random() * total)})")
+      total = $("#{marx.settings.form} input[name=#{clean_name}]").length
+      $("#{marx.settings.form} input[name=#{name}]:eq(#{Math.floor(Math.random() * total)})")
         .attr('data-marx-d', true)
         .attr('checked', true)
         .trigger('change').trigger('blur')
-      @effected.radio_buttons += 1
-
+      marx.effected.radio_buttons += 1
 
   populate_selects: ->
-    this.effected.selects = 0
-    $("#{this.settings.form} select").each (i, select) =>
-      @effected.selects += 1
+    marx = this.marx or this
+    marx.effected.selects = 0
+    $("#{marx.settings.form} select").each (i, select) =>
+      marx.effected.selects += 1
       total = $(select).attr('data-marx-d', true).find('option').length
       rand = Math.floor(Math.random() * total)
       $opt = $(select).find("option:eq(#{rand})")
@@ -246,7 +272,6 @@ $.extend Marx.prototype,
           .attr('type', 'text')
           .attr('data-marx-d', true)
           .attr('data-marx-hidden', true)
-
 
   trigger_notifications: ->
     num = 0
@@ -272,17 +297,19 @@ $.extend Marx.prototype,
       .data('text', from)
 
   generate_ipsum: () ->
+    marx = this.marx or this
     $('.marx-generated-ipsum').remove()
-    num = this.$('.ipsum input').val()
+    num = marx.$('.ipsum input').val()
     $ipsum = $("""
-      <div class='marx-generated-ipsum marx-#{this.settings.position}'>
+      <div class='marx-generated-ipsum marx-#{marx.settings.position}'>
         <h4>Marx Ipsum</h4>
         <a href='#close' class='marx-ipsum-close'>X</a>
         <div class='marx-container'></div>
       </div>
     """)
     $('body').append $ipsum
-    $.getJSON "#{this._url}/monologues", (data) =>
+    $.getJSON "#{marx._url}/monologues", (data) =>
+      console.log data
       max = if num > data.length then data.length-1 else num
       monologues = data.sort () -> 0.5 - Math.random()
       for i in [1..max]

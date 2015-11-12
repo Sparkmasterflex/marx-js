@@ -21,19 +21,37 @@ $.extend(Marx.prototype, {
     position: 'bottom-right',
     form: "",
     ipsum: 3,
-    max_ipsum: 10
-  },
-  effected: {
-    inputs: 0,
-    texareas: 0,
-    selects: 0,
-    check_boxes: 0,
-    radio_buttons: 0,
-    hidden_fields: 0
+    max_ipsum: 10,
+    onload: false
   },
   initialize: function(options) {
     $.extend(this.settings, options);
+    this.methods = this.method_by_keys();
+    this.effected = this.default_counts();
+    if (this.settings.onload) {
+      this.auto_populate();
+    }
     return this.create_controls();
+  },
+  method_by_keys: function() {
+    return {
+      marx: this,
+      inputs: this.populate_inputs,
+      textareas: this.populate_textareas,
+      checkboxes: this.populate_checkboxes,
+      radios: this.populate_radios,
+      selects: this.populate_selects
+    };
+  },
+  default_counts: function() {
+    return {
+      inputs: 0,
+      texareas: 0,
+      selects: 0,
+      check_boxes: 0,
+      radio_buttons: 0,
+      hidden_fields: 0
+    };
   },
   /*=========================
         BUILD CONTROLS
@@ -137,6 +155,18 @@ $.extend(Marx.prototype, {
   =========================
   */
 
+  auto_populate: function() {
+    var onload,
+      _this = this;
+    onload = this.settings.onload;
+    if (onload === true) {
+      return this.populate_whole_form();
+    } else {
+      return $.each(onload, function(i, opt) {
+        return _this.methods[opt]();
+      });
+    }
+  },
   populate_whole_form: function(e) {
     this.populate_inputs();
     this.populate_textareas();
@@ -146,12 +176,16 @@ $.extend(Marx.prototype, {
     return false;
   },
   populate_inputs: function() {
-    var _this = this;
-    this.effected.inputs = 0;
-    return $.each($("" + this.settings.form + " input"), function(i, input) {
+    var marx, _ref,
+      _this = this;
+    marx = this.marx || this;
+    if ((_ref = marx.effected) != null) {
+      _ref.inputs = 0;
+    }
+    return $.each($("" + marx.settings.form + " input"), function(i, input) {
       var brother, movie, obj, rand, str, strings, value, year;
       if (!($(input).val() !== "" || $(input).hasClass('no-populate'))) {
-        obj = _this.get_random();
+        obj = marx.get_random();
         brother = JSON.parse(obj.brother);
         movie = JSON.parse(obj.movie);
         strings = [brother.name, movie.name, obj.first_name, obj.last_name, obj.description].filter(function() {
@@ -179,11 +213,11 @@ $.extend(Marx.prototype, {
           }
         })();
         if ($(input).attr('type') === 'password') {
-          _this.show_password($(input), value);
+          marx.show_password($(input), value);
         }
         if (['checkbox', 'radio', 'hidden'].indexOf($(input).attr('type') < 0)) {
           $(input).attr('data-marx-d', true).val(value).trigger('change').trigger('blur');
-          return _this.effected.inputs += 1;
+          return marx.effected.inputs += 1;
         }
       }
     });
@@ -192,21 +226,24 @@ $.extend(Marx.prototype, {
     return $input.after("<p class='marx-password-note'>Password: " + password + "</p>");
   },
   populate_textareas: function() {
-    var _this = this;
-    this.effected.textareas = 0;
-    return $.getJSON("" + this._url + "/quotes", function(data) {
-      return $.each($("" + _this.settings.form + " textarea"), function(i, input) {
-        _this.effected.textareas += 1;
+    var marx,
+      _this = this;
+    marx = this.marx || this;
+    marx.effected.textareas = 0;
+    return $.getJSON("" + marx._url + "/quotes", function(data) {
+      return $.each($("" + marx.settings.form + " textarea"), function(i, input) {
+        marx.effected.textareas += 1;
         return $(input).attr('data-marx-d', true).val(data[Math.floor(Math.random() * data.length)].body).trigger('change').trigger('blur');
       });
     });
   },
   populate_checkboxes: function() {
-    var names,
+    var marx, names,
       _this = this;
-    this.effected.check_boxes = 0;
+    marx = this.marx || this;
+    marx.effected.check_boxes = 0;
     names = [];
-    $.each($("" + this.settings.form + " input[type=checkbox]"), function(i, input) {
+    $.each($("" + marx.settings.form + " input[type=checkbox]"), function(i, input) {
       if (!(names.indexOf($(input).attr('name')) >= 0)) {
         return names.push($(input).attr('name'));
       }
@@ -215,18 +252,19 @@ $.extend(Marx.prototype, {
       var checked, clean_name;
       checked = Math.floor(Math.random() * 2) === 1 ? true : false;
       clean_name = name.replace(/\[/g, '\\[').replace(/\]/g, '\\]');
-      $("" + _this.settings.form + " input[name=" + clean_name + "]").attr('data-marx-d', true).attr('checked', checked).trigger('change').trigger('blur');
+      $("" + marx.settings.form + " input[name=" + clean_name + "]").attr('data-marx-d', true).attr('checked', checked).trigger('change').trigger('blur');
       if (checked) {
-        return _this.effected.check_boxes += 1;
+        return marx.effected.check_boxes += 1;
       }
     });
   },
   populate_radios: function() {
-    var names,
+    var marx, names,
       _this = this;
-    this.effected.radio_buttons = 0;
+    marx = this.marx || this;
+    marx.effected.radio_buttons = 0;
     names = [];
-    $("" + this.settings.form + " input[type=radio]").each(function(i, input) {
+    $("" + marx.settings.form + " input[type=radio]").each(function(i, input) {
       if (!(names.indexOf($(input).attr('name')) >= 0)) {
         return names.push($(input).attr('name'));
       }
@@ -234,17 +272,19 @@ $.extend(Marx.prototype, {
     return $.each(names, function(i, name) {
       var clean_name, total;
       clean_name = name.replace(/\[/g, '\\[').replace(/\]/g, '\\]');
-      total = $("" + _this.settings.form + " input[name=" + clean_name + "]").length;
-      $("" + _this.settings.form + " input[name=" + name + "]:eq(" + (Math.floor(Math.random() * total)) + ")").attr('data-marx-d', true).attr('checked', true).trigger('change').trigger('blur');
-      return _this.effected.radio_buttons += 1;
+      total = $("" + marx.settings.form + " input[name=" + clean_name + "]").length;
+      $("" + marx.settings.form + " input[name=" + name + "]:eq(" + (Math.floor(Math.random() * total)) + ")").attr('data-marx-d', true).attr('checked', true).trigger('change').trigger('blur');
+      return marx.effected.radio_buttons += 1;
     });
   },
   populate_selects: function() {
-    var _this = this;
-    this.effected.selects = 0;
-    return $("" + this.settings.form + " select").each(function(i, select) {
+    var marx,
+      _this = this;
+    marx = this.marx || this;
+    marx.effected.selects = 0;
+    return $("" + marx.settings.form + " select").each(function(i, select) {
       var $opt, rand, total;
-      _this.effected.selects += 1;
+      marx.effected.selects += 1;
       total = $(select).attr('data-marx-d', true).find('option').length;
       rand = Math.floor(Math.random() * total);
       $opt = $(select).find("option:eq(" + rand + ")");
@@ -299,14 +339,16 @@ $.extend(Marx.prototype, {
     return $span.text(to).data('text', from);
   },
   generate_ipsum: function() {
-    var $ipsum, num,
+    var $ipsum, marx, num,
       _this = this;
+    marx = this.marx || this;
     $('.marx-generated-ipsum').remove();
-    num = this.$('.ipsum input').val();
-    $ipsum = $("<div class='marx-generated-ipsum marx-" + this.settings.position + "'>\n  <h4>Marx Ipsum</h4>\n  <a href='#close' class='marx-ipsum-close'>X</a>\n  <div class='marx-container'></div>\n</div>");
+    num = marx.$('.ipsum input').val();
+    $ipsum = $("<div class='marx-generated-ipsum marx-" + marx.settings.position + "'>\n  <h4>Marx Ipsum</h4>\n  <a href='#close' class='marx-ipsum-close'>X</a>\n  <div class='marx-container'></div>\n</div>");
     $('body').append($ipsum);
-    return $.getJSON("" + this._url + "/monologues", function(data) {
+    return $.getJSON("" + marx._url + "/monologues", function(data) {
       var i, max, monologues, _i;
+      console.log(data);
       max = num > data.length ? data.length - 1 : num;
       monologues = data.sort(function() {
         return 0.5 - Math.random();
