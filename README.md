@@ -7,8 +7,8 @@ jQuery plugin for development and testing HTML forms via populating
 Installation is easy. Download Marx.js, link to it with a &lt;script> tag and then initialize it in your JavaScript.
 
 Downloads
-Development Version 0.3.1
-Production Version 0.3.1
+Development Version 1.1.1
+Production Version 1.1.1
 
 <pre>
 &lt;script src="/javascripts/marx.js">&lt;/script>
@@ -29,6 +29,7 @@ Production Version 0.3.1
 | position | bottom-right | top-left, top-right, bottom-right, bottom-left |
 | ipsum | 3 | default number of paragraphs for the ipsum generator |
 | ipsum-max | 10 | maximum paragraphs allowed to generate |
+| onload    | false | have marx.js fire on page load. options of <em>true</em>, or an array of all or a subset of [inputs, textareas, checkboxes, radios, selects] |
 
 
 **Control Options**
