@@ -1,6 +1,6 @@
 /*
   moment.js
-  version : 1.0.1
+  version : 1.1.1
   authors : Keith Raymond, Marx.js contributor
   license : MIT
   marxjs.com
